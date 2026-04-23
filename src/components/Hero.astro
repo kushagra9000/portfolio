@@ -1,0 +1,421 @@
+---
+const dashboardImage = "/projects/hero-dashboard.png";
+---
+<section class="hero" id="hero">
+  <div class="hero-bg-glow"></div>
+  <div class="container hero-grid">
+    <div class="hero-content">
+      <div class="tags-strip reveal" style="--delay: 0.1s">
+        <span class="tag-pill">ENTERPRISE ARCHITECTURE</span>
+        <span class="dot-separator"></span>
+        <span class="tag">PRODUCT BUILDER</span>
+        <span class="dot-separator"></span>
+        <span class="tag accent">UI/UX ENGINEER</span>
+      </div>
+      
+      <h1 class="reveal" style="--delay: 0.2s">Designing <span class="jade-highlight shimmer">systems</span>, not just screens.</h1>
+      
+      <p class="reveal" style="--delay: 0.3s">I’m a UI/UX designer and builder focused on complex systems — from AI-powered timetable generation to medical software. I care about clarity, scale, and decisions that actually work in the real world.</p>
+      
+      <div class="cta-group reveal" style="--delay: 0.4s">
+        <a href="#work" class="btn-dynamic-hero">
+          <div class="btn-glow"></div>
+          <div class="btn-border-animation"></div>
+          <span class="btn-text">Explore Case Studies</span>
+          <span class="btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal" style="--delay: 0.5s">
+      <div class="mockup-container" id="tilt-card">
+        <div class="mockup-card">
+          <img src={dashboardImage} alt="Institutional Portfolio Dashboard Mockup" />
+          <div class="pagination">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="mockup-shadow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const card = document.getElementById('tilt-card');
+  if (card) {
+    const cardContent = card.querySelector('.mockup-card');
+    
+    document.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = (y - centerY) / 20;
+      const rotateY = (centerX - x) / 20;
+      
+      if (x > -100 && x < rect.width + 100 && y > -100 && y < rect.height + 100) {
+        cardContent.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      } else {
+        cardContent.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+      }
+    });
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    padding-top: 160px;
+    padding-bottom: 80px;
+    background-color: var(--color-surface);
+    overflow: hidden;
+  }
+
+  .hero-bg-glow {
+    position: absolute;
+    top: -10%;
+    right: -10%;
+    width: 70%;
+    height: 90%;
+    background: radial-gradient(circle, rgba(0, 78, 52, 0.12) 0%, rgba(255, 255, 255, 0) 70%);
+    z-index: 0;
+    pointer-events: none;
+    animation: pulse-bg 8s infinite alternate ease-in-out;
+  }
+
+  @keyframes pulse-bg {
+    0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+    100% { transform: scale(1.1) translate(-2%, 2%); opacity: 0.7; }
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  /* Reveal Animations */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fade-in-up 1s var(--delay) forwards cubic-bezier(0.2, 1, 0.3, 1);
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .tags-strip {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .tag-pill {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 6px 12px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    color: #444;
+  }
+
+  .tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: #888;
+  }
+
+  .tag.accent {
+    color: #b05a4d;
+  }
+
+  .dot-separator {
+    width: 4px;
+    height: 4px;
+    background-color: #ccc;
+    border-radius: 50%;
+  }
+
+  h1 {
+    font-size: 72px;
+    line-height: 1.0;
+    margin-bottom: 24px;
+    color: var(--color-on-surface);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .jade-highlight {
+    color: var(--color-primary);
+    position: relative;
+    display: inline-block;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg, 
+      var(--color-primary) 0%, 
+      #2ecc71 25%, 
+      var(--color-primary) 50%,
+      #2ecc71 75%,
+      var(--color-primary) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: text-shimmer 3s linear infinite;
+    display: inline-block;
+  }
+
+  @keyframes text-shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  p {
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--color-on-surface);
+    opacity: 0.6;
+    margin-bottom: 40px;
+    max-width: 500px;
+  }
+
+  .cta-group {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-dynamic-hero {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    background: #1b1c16;
+    color: white;
+    padding: 20px 40px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .btn-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, var(--color-primary) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+  }
+
+  .btn-border-animation {
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    border-radius: 100px;
+    background: linear-gradient(90deg, 
+      transparent 0%, 
+      transparent 40%, 
+      var(--color-primary) 50%, 
+      transparent 60%, 
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: border-trail 3s linear infinite;
+    z-index: -1;
+    opacity: 0.3;
+  }
+
+  @keyframes border-trail {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .btn-dynamic-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-primary);
+    transform: translateX(-101%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: -1;
+  }
+
+  .btn-dynamic-hero .btn-text {
+    position: relative;
+    z-index: 2;
+  }
+
+  .btn-dynamic-hero .btn-icon {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .btn-dynamic-hero:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(0, 78, 52, 0.3);
+  }
+
+  .btn-dynamic-hero:hover .btn-glow {
+    opacity: 0.4;
+  }
+
+  .btn-dynamic-hero:hover::before {
+    transform: translateX(0);
+  }
+
+  .btn-dynamic-hero:hover .btn-icon {
+    transform: translateX(8px);
+  }
+
+  /* Looping pulse shadow even when not hovered */
+  .btn-dynamic-hero {
+    animation: breathing-glow 4s infinite ease-in-out;
+  }
+
+  @keyframes breathing-glow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0, 78, 52, 0); }
+    50% { box-shadow: 0 0 20px 2px rgba(0, 78, 52, 0.15); }
+  }
+
+  /* Interactive Visual */
+  .hero-visual {
+    width: 100%;
+    perspective: 1000px;
+  }
+
+  .mockup-container {
+    position: relative;
+    width: 100%;
+    transform-style: preserve-3d;
+  }
+
+  .mockup-card {
+    background-color: #121212;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+    position: relative;
+    aspect-ratio: 1.1 / 1;
+    transition: transform 0.1s ease-out;
+    z-index: 2;
+  }
+
+  .mockup-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mockup-shadow {
+    position: absolute;
+    bottom: -20px;
+    left: 5%;
+    width: 90%;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.2);
+    filter: blur(25px);
+    border-radius: 50%;
+    z-index: 1;
+  }
+
+  .pagination {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    display: flex;
+    gap: 6px;
+  }
+
+  .pagination .dot {
+    width: 6px;
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+  }
+
+  .pagination .dot.active {
+    background-color: var(--color-primary);
+    width: 12px;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 1024px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    
+    h1 {
+      font-size: 56px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding-top: 120px;
+    }
+    
+    h1 {
+      font-size: 36px; /* Slightly smaller for better mobile fit */
+      line-height: 1.1;
+    }
+
+    .tags-strip {
+      gap: 8px;
+    }
+
+    .tag-pill, .tag {
+      font-size: 10px;
+    }
+    
+    .cta-group {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .btn-dynamic-hero {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

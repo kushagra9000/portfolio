@@ -1,0 +1,328 @@
+---
+const schedule = [
+  { time: 'Research', subject: 'Constraint Mapping', room: 'Defining the problem space', color: 'jade' },
+  { time: 'Design', subject: 'System Architecture', room: 'Building scalable logic', color: 'neutral' },
+  { time: 'Build', subject: '0 → 1 Execution', room: 'From idea to working software', color: 'jade' },
+  { time: 'Scale', subject: 'Operational Clarity', room: 'Refining for the real world', color: 'neutral' },
+];
+---
+<section class="alt" id="about">
+  <div class="container">
+    <div class="section-header">
+      <span class="label">My Approach</span>
+      <h2>Designing systems, not just screens.</h2>
+    </div>
+    <div class="timetable-container">
+      <div class="timetable-wrapper">
+        <div class="timetable">
+          {schedule.map((item, index) => (
+            <div class={`time-slot ${item.color}`} style={`--index: ${index}`}>
+              <div class="scan-line"></div>
+              <div class="time">{item.time}</div>
+              <div class="details">
+                <h3>{item.subject}</h3>
+                <span class="room">{item.room}</span>
+              </div>
+              <div class="status-indicator">
+                <div class="pulse"></div>
+                <div class="pulse delay"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="timetable-info">
+        <h3>How I Work</h3>
+        <p>I start with constraints — the rules that define the problem space. I build systems, not just components, focusing on decisions that actually work in the real world.</p>
+        <ul class="features">
+          <li>I start with constraints — the rules that define the problem space.</li>
+          <li>I build systems, not just components.</li>
+          <li>I focus on 0 → 1 execution, from idea to working software.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-header {
+    margin-bottom: 80px;
+  }
+
+  .label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .label::after {
+    content: '';
+    height: 1px;
+    width: 40px;
+    background: var(--color-primary);
+    opacity: 0.3;
+  }
+
+  h2 {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    max-width: 600px;
+  }
+
+  .timetable-container {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 100px;
+    align-items: flex-start;
+  }
+
+  .timetable-wrapper {
+    position: relative;
+    padding: 20px;
+    background: rgba(0, 78, 52, 0.02);
+    border-radius: 32px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+  }
+
+  .timetable {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .time-slot {
+    display: flex;
+    gap: 32px;
+    padding: 32px;
+    background-color: white;
+    border-radius: 20px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: slide-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--index) * 0.15s);
+    opacity: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  }
+
+  @keyframes slide-in {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .time-slot:hover {
+    transform: translateX(12px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.04);
+    border-color: var(--color-primary);
+    z-index: 2;
+  }
+
+  .time-slot.jade {
+    background: linear-gradient(to right, rgba(0, 78, 52, 0.02), white);
+  }
+
+  .time-slot.jade::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--color-primary);
+  }
+
+  /* Scan line animation */
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.8),
+      transparent
+    );
+    transform: skewX(-20deg);
+    transition: 0.5s;
+    pointer-events: none;
+  }
+
+  .time-slot:hover .scan-line {
+    animation: scan 1.5s infinite;
+  }
+
+  @keyframes scan {
+    0% { left: -100%; }
+    100% { left: 200%; }
+  }
+
+  .time {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color-on-surface);
+    opacity: 0.4;
+    min-width: 80px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .details h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--color-on-surface);
+  }
+
+  .room {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-primary);
+    font-weight: 700;
+    opacity: 0.6;
+  }
+
+  .status-indicator {
+    margin-left: auto;
+    width: 10px;
+    height: 10px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    position: relative;
+    z-index: 5;
+  }
+
+  .pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .time-slot:hover .pulse {
+    animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+  }
+
+  .pulse.delay {
+    animation-delay: 1s !important;
+  }
+
+  @keyframes pulse-ring {
+    0% { 
+      transform: translate(-50%, -50%) scale(1); 
+      opacity: 0.8; 
+    }
+    100% { 
+      transform: translate(-50%, -50%) scale(8); 
+      opacity: 0; 
+    }
+  }
+
+  /* Card shadow pulse */
+  .time-slot:hover {
+    animation: card-pulse 2s infinite alternate ease-in-out;
+  }
+
+  @keyframes card-pulse {
+    0% { box-shadow: 0 4px 12px rgba(0, 78, 52, 0.05); }
+    100% { box-shadow: 0 12px 32px rgba(0, 78, 52, 0.15); }
+  }
+
+  .timetable-info {
+    padding-top: 40px;
+  }
+
+  .timetable-info h3 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .timetable-info p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    opacity: 0.6;
+  }
+
+  .features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .features li {
+    padding: 20px 24px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-on-surface);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .features li:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  .features li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Automated looping highlight */
+  .timetable::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  @media (max-width: 1024px) {
+    .timetable-container {
+      grid-template-columns: 1fr;
+      gap: 60px;
+    }
+    
+    .timetable-info {
+      padding-top: 0;
+    }
+  }
+</style>
