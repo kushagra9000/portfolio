@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TorqUp — Case Study · KVS</title>
+  <meta name="description" content="Case study on TorqUp — a unified automotive platform for enthusiasts, featuring curated news, 4K visual archives, and AI-powered intelligence.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: #FAFAF9; --fg: #000; --muted: #6F6F6F; --border: rgba(0,0,0,0.09); --card-bg: #F2F1EF; --accent: #C0392B; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--fg); font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    .nav { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 80px); max-width: 1100px; z-index: 50; background: rgba(250,250,249,0.85); backdrop-filter: blur(14px); border: 1px solid var(--border); border-radius: 999px; padding: 13px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: 'Instrument Serif', serif; font-size: 1.25rem; letter-spacing: -0.02em; }
+    .nav-logo sup { font-size: 0.5em; vertical-align: super; }
+    .nav-back { font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--fg); }
+    .cs-hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 120px 80px 80px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; background: #0A0A0A; }
+    .cs-hero-scanlines { position: absolute; inset: 0; z-index: 1; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.012) 2px, rgba(255,255,255,0.012) 4px); }
+    .cs-hero-content { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; width: 100%; }
+    .cs-hero-tag { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+    .cs-hero-title { font-family: 'Instrument Serif', serif; font-size: clamp(3.5rem, 8vw, 8rem); font-weight: 400; line-height: 0.92; letter-spacing: -0.04em; color: #fff; margin-bottom: 32px; }
+    .cs-hero-title em { font-style: italic; color: rgba(255,255,255,0.35); display: block; }
+    .cs-hero-meta { display: flex; gap: 48px; flex-wrap: wrap; }
+    .cs-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .cs-meta-label { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); }
+    .cs-meta-val { font-size: 0.9rem; color: rgba(255,255,255,0.8); font-weight: 500; }
+    .cs-hero-actions { display: flex; gap: 16px; align-items: center; margin-top: 40px; flex-wrap: wrap; }
+    .cs-hero-btn { display: inline-flex; align-items: center; gap: 8px; background: #ffffff; color: #000000; border-radius: 999px; padding: 14px 32px; font-size: 0.85rem; font-weight: 600; transition: transform 0.2s ease; }
+    .cs-hero-btn:hover { transform: scale(1.03); }
+    .cs-body { max-width: 1280px; margin: 0 auto; padding: 0 80px; }
+    .cs-section { padding: 96px 0; border-bottom: 1px solid var(--border); }
+    .cs-section:last-child { border-bottom: none; }
+    .cs-section-label { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; display: flex; align-items: center; gap: 16px; }
+    .cs-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .cs-h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 24px; }
+    .cs-h2 em { font-style: italic; color: var(--muted); }
+    .cs-p { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 680px; margin-bottom: 16px; }
+    .cs-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .cs-2col-wide { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: start; }
+    .cs-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 56px 0; }
+    .cs-stat { background: var(--bg); padding: 32px 28px; }
+    .cs-stat-val { font-family: 'Instrument Serif', serif; font-size: 2.6rem; letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
+    .cs-stat-label { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+    .cs-screenshot { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); background: #0A0A0A; margin: 48px 0; }
+    .cs-screenshot-bar { height: 36px; background: #1a1a1a; display: flex; align-items: center; padding: 0 14px; gap: 7px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .cs-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .cs-screenshot img { width: 100%; display: block; }
+    .cs-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    .cs-card { background: var(--card-bg); border-radius: 14px; padding: 32px 28px; }
+    .cs-card-num { font-family: 'Instrument Serif', serif; font-size: 2rem; opacity: 0.15; margin-bottom: 16px; }
+    .cs-card-title { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+    .cs-card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+    .cs-quote { border-left: 3px solid var(--accent); padding: 8px 0 8px 28px; margin: 48px 0; }
+    .cs-quote p { font-family: 'Instrument Serif', serif; font-size: clamp(1.3rem, 2vw, 1.8rem); line-height: 1.4; font-style: italic; }
+    .cs-back-cta { text-align: center; padding: 80px 0; }
+    .cs-back-btn { display: inline-flex; align-items: center; gap: 10px; background: var(--fg); color: var(--bg); border-radius: 999px; padding: 16px 40px; font-size: 0.9rem; font-weight: 600; transition: opacity 0.2s; }
+    .cs-back-btn:hover { opacity: 0.8; }
+    @keyframes fadeRise { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    @media (max-width: 900px) {
+      .cs-hero { padding: 100px 24px 60px; }
+      .cs-body { padding: 0 24px; }
+      .cs-2col, .cs-2col-wide { grid-template-columns: 1fr; gap: 40px; }
+      .cs-stats { grid-template-columns: repeat(2,1fr); }
+      .cs-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <span class="nav-logo">KVS<sup>®</sup></span>
+    <a href="../" class="nav-back">← Back to Portfolio</a>
+  </nav>
+
+  <section class="cs-hero">
+    <div class="cs-hero-scanlines"></div>
+    <div class="cs-hero-content">
+      <p class="cs-hero-tag" style="animation:fadeRise 0.8s ease-out both;">Automotive Hub · AI Integration · Product Strategy</p>
+      <h1 class="cs-hero-title" style="animation:fadeRise 0.8s ease-out 0.15s both;">TorqUp<em>One platform. Every gear.</em></h1>
+      <div class="cs-hero-meta" style="animation:fadeRise 0.8s ease-out 0.3s both;">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span><span class="cs-meta-val">Designer & Product Strategist</span></div>
+        <div class="cs-meta-item"><span class="cs-meta-label">Domain</span><span class="cs-meta-val">Automotive · Community · AI</span></div>
+        <div class="cs-meta-item"><span class="cs-meta-label">Stack</span><span class="cs-meta-val">React · Node · AI APIs</span></div>
+        <div class="cs-meta-item"><span class="cs-meta-label">Timeline</span><span class="cs-meta-val">2026 – Present</span></div>
+      </div>
+      <div class="cs-hero-actions" style="animation:fadeRise 0.8s ease-out 0.45s both;">
+        <a href="https://torqup.in/" target="_blank" class="cs-hero-btn">Website ↗</a>
+        <a href="https://play.google.com/store/apps/details?id=com.fluxorlabs.torqup.app&amp;hl=en_IN" target="_blank" class="cs-hero-btn">Playstore ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="cs-body">
+    <section class="cs-section">
+      <p class="cs-section-label reveal">Overview</p>
+      <div class="cs-2col-wide">
+        <div>
+          <h2 class="cs-h2 reveal">The automotive web<br /><em>was fragmented.</em></h2>
+          <p class="cs-p reveal">Automotive enthusiasts were scattered across Reddit threads, YouTube channels, WhatsApp groups, and separate marketplaces. Getting useful, trustworthy information about a specific car meant hunting across five different platforms.</p>
+          <p class="cs-p reveal">TorqUp is a unified platform for automotive enthusiasts — bringing together a curated news feed, gear marketplace, visual archive, and AI-powered decision tools in one coherent product.</p>
+        </div>
+        <div class="reveal">
+          <div class="cs-stats" style="margin:0;">
+            <div class="cs-stat"><div class="cs-stat-val">1</div><div class="cs-stat-label">Platform for news, gear, community & AI</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">4K</div><div class="cs-stat-label">High-res visual archive quality</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">Multi</div><div class="cs-stat-label">Country news feeds (IN, US, UK, AU…)</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">AI</div><div class="cs-stat-label">Powered buying & comparison tools</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cs-screenshot reveal">
+      <div class="cs-screenshot-bar">
+        <div class="cs-dot" style="background:#FF5F57;"></div>
+        <div class="cs-dot" style="background:#FEBC2E;"></div>
+        <div class="cs-dot" style="background:#28C840;"></div>
+      </div>
+      <img src="../uploads/torqup-1.png" alt="TorqUp News Feed" />
+    </div>
+
+    <section class="cs-section">
+      <p class="cs-section-label reveal">The Problem</p>
+      <h2 class="cs-h2 reveal">Fragmentation<br /><em>kills passion.</em></h2>
+      <p class="cs-p reveal">The automotive enthusiast community had energy but no single home. Existing platforms either focused on one thing (marketplace, or news, or community) or tried to do everything badly. The visual quality of available content was inconsistent. AI tools were nowhere in sight.</p>
+      <div class="cs-cards">
+        <div class="cs-card reveal">
+          <div class="cs-card-num">01</div>
+          <div class="cs-card-title">Discovery Problem</div>
+          <p class="cs-card-desc">Finding the right information — spec comparisons, ownership costs, community opinions — required visiting 4–5 different sites and manually synthesising the results.</p>
+        </div>
+        <div class="cs-card reveal">
+          <div class="cs-card-num">02</div>
+          <div class="cs-card-title">Quality Bar</div>
+          <p class="cs-card-desc">Most automotive content online is low-resolution, watermarked, or behind paywalls. Enthusiasts deserved a high-quality visual commons — free, curated, and searchable.</p>
+        </div>
+        <div class="cs-card reveal">
+          <div class="cs-card-num">03</div>
+          <div class="cs-card-title">No Intelligence Layer</div>
+          <p class="cs-card-desc">"Should I buy this car?" was still a question that required hours of forum reading. An AI that understood automotive context and could give real answers was missing entirely.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="cs-screenshot reveal">
+      <div class="cs-screenshot-bar">
+        <div class="cs-dot" style="background:#FF5F57;"></div>
+        <div class="cs-dot" style="background:#FEBC2E;"></div>
+        <div class="cs-dot" style="background:#28C840;"></div>
+      </div>
+      <img src="../uploads/torqup-3.png" alt="TorqUp Visual Archive" />
+    </div>
+
+    <section class="cs-section">
+      <p class="cs-section-label reveal">Approach</p>
+      <div class="cs-2col">
+        <div>
+          <h2 class="cs-h2 reveal">Curated + intelligent<br /><em>not just aggregated.</em></h2>
+          <p class="cs-p reveal">The product was designed around three pillars: a curated daily feed (country-filtered, category-tagged), a high-resolution visual archive (4K quality, free to browse), and an AI layer that could answer specific questions about cars, specs, and buying decisions.</p>
+          <p class="cs-p reveal">The dark, editorial design language was intentional — inspired by high-end automotive media, it signals quality and seriousness. The sidebar navigation keeps context clear while allowing deep browsing without losing your place.</p>
+        </div>
+        <div>
+          <div class="cs-quote reveal">
+            <p>"A passionate community deserves a product that matches their passion. Generic aggregator design wasn't going to cut it."</p>
+          </div>
+          <p class="cs-p reveal">The gear marketplace integrates contextually — when you're reading about a product category, relevant gear surfaces organically. The experience is designed to feel like talking to a knowledgeable friend, not browsing an e-commerce catalogue.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="cs-section">
+      <p class="cs-section-label reveal">Outcome</p>
+      <h2 class="cs-h2 reveal">A digital home<br /><em>for car people.</em></h2>
+      <p class="cs-p reveal">TorqUp launched as a unified platform combining all four pillars — news, visuals, gear, and AI — in a single coherent product. The editorial design language differentiated it immediately from generic aggregators.</p>
+      <p class="cs-p reveal">The AI integration reduced the "research to decision" time for buying decisions from hours to minutes, by surfacing structured comparisons, community sentiment, and expert context in one place. The visual archive built an audience of enthusiasts who returned purely for the imagery — a distribution flywheel that drove organic growth.</p>
+    </section>
+
+    <div class="cs-back-cta">
+      <a href="../" class="cs-back-btn">← Back to Portfolio</a>
+    </div>
+  </div>
+
+  <script>
+    const els = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }});
+    }, { threshold: 0.1 });
+    els.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

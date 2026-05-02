@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Taybly — Case Study · KVS</title>
+  <meta name="description" content="Case study on Taybly — an AI-powered constraint solver for school timetabling, transforming complex scheduling into a seamless automated process.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #FAFAF9; --fg: #000; --muted: #6F6F6F;
+      --border: rgba(0,0,0,0.09); --card-bg: #F2F1EF;
+      --accent: #1B6B45;
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--fg); font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+
+    /* NAV */
+    .nav {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      width: calc(100% - 80px); max-width: 1100px; z-index: 50;
+      background: rgba(250,250,249,0.85); backdrop-filter: blur(14px);
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 13px 28px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { font-family: 'Instrument Serif', serif; font-size: 1.25rem; letter-spacing: -0.02em; }
+    .nav-logo sup { font-size: 0.5em; vertical-align: super; }
+    .nav-back { font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 8px; transition: color 0.2s; }
+    .nav-back:hover { color: var(--fg); }
+
+    /* HERO */
+    .cs-hero {
+      min-height: 80vh; display: flex; flex-direction: column;
+      justify-content: flex-end; padding: 120px 80px 80px;
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .cs-hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, #0D3D25 0%, #1B6B45 60%, #0a2518 100%);
+    }
+    .cs-hero-noise {
+      position: absolute; inset: 0; z-index: 1; opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .cs-hero-content { position: relative; z-index: 2; max-width: 1280px; margin: 0 auto; width: 100%; }
+    .cs-hero-tag { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
+    .cs-hero-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(3.5rem, 8vw, 8rem); font-weight: 400;
+      line-height: 0.92; letter-spacing: -0.04em; color: #fff;
+      margin-bottom: 32px;
+    }
+    .cs-hero-title em { font-style: italic; color: rgba(255,255,255,0.45); display: block; }
+    .cs-hero-meta { display: flex; gap: 48px; flex-wrap: wrap; }
+    .cs-meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .cs-meta-label { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .cs-meta-val { font-size: 0.9rem; color: rgba(255,255,255,0.85); font-weight: 500; }
+    .cs-hero-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #ffffff; color: #000000;
+      border-radius: 999px; padding: 14px 32px;
+      font-size: 0.85rem; font-weight: 600;
+      transition: transform 0.2s ease; margin-top: 40px;
+    }
+    .cs-hero-btn:hover { transform: scale(1.03); }
+
+    /* LAYOUT */
+    .cs-body { max-width: 1280px; margin: 0 auto; padding: 0 80px; }
+    .cs-section { padding: 96px 0; border-bottom: 1px solid var(--border); }
+    .cs-section:last-child { border-bottom: none; }
+    .cs-section-label { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 40px; display: flex; align-items: center; gap: 16px; }
+    .cs-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .cs-h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 400; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 24px; }
+    .cs-h2 em { font-style: italic; color: var(--muted); }
+    .cs-p { font-size: 1rem; color: var(--muted); line-height: 1.8; max-width: 680px; margin-bottom: 16px; }
+    .cs-p:last-child { margin-bottom: 0; }
+
+    /* 2-col */
+    .cs-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .cs-2col-wide { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; align-items: start; }
+
+    /* STAT STRIP */
+    .cs-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin: 56px 0; }
+    .cs-stat { background: var(--bg); padding: 32px 28px; }
+    .cs-stat-val { font-family: 'Instrument Serif', serif; font-size: 2.6rem; letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px; }
+    .cs-stat-label { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+    /* SCREENSHOT */
+    .cs-screenshot {
+      border-radius: 12px; overflow: hidden;
+      border: 1px solid var(--border);
+      background: #F0EFED; margin: 48px 0;
+    }
+    .cs-screenshot-bar {
+      height: 36px; background: #E8E7E4; display: flex; align-items: center;
+      padding: 0 14px; gap: 7px; border-bottom: 1px solid var(--border);
+    }
+    .cs-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .cs-screenshot img { width: 100%; display: block; }
+
+    /* CHALLENGE / SOLUTION cards */
+    .cs-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 48px; }
+    .cs-card { background: var(--card-bg); border-radius: 14px; padding: 32px 28px; }
+    .cs-card-num { font-family: 'Instrument Serif', serif; font-size: 2rem; opacity: 0.15; margin-bottom: 16px; }
+    .cs-card-title { font-size: 1rem; font-weight: 600; margin-bottom: 10px; }
+    .cs-card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+    /* QUOTE */
+    .cs-quote { border-left: 3px solid var(--accent); padding: 8px 0 8px 28px; margin: 48px 0; }
+    .cs-quote p { font-family: 'Instrument Serif', serif; font-size: clamp(1.3rem, 2vw, 1.8rem); line-height: 1.4; font-style: italic; color: var(--fg); }
+
+    /* BACK CTA */
+    .cs-back-cta { text-align: center; padding: 80px 0; }
+    .cs-back-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--fg); color: var(--bg);
+      border-radius: 999px; padding: 16px 40px;
+      font-size: 0.9rem; font-weight: 600;
+      transition: opacity 0.2s ease;
+    }
+    .cs-back-btn:hover { opacity: 0.8; }
+
+    /* ANIM */
+    @keyframes fadeRise { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 900px) {
+      .cs-hero { padding: 100px 24px 60px; }
+      .cs-body { padding: 0 24px; }
+      .cs-2col, .cs-2col-wide { grid-template-columns: 1fr; gap: 40px; }
+      .cs-stats { grid-template-columns: repeat(2,1fr); }
+      .cs-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <span class="nav-logo">KVS<sup>®</sup></span>
+    <a href="../" class="nav-back">← Back to Portfolio</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="cs-hero">
+    <div class="cs-hero-bg"></div>
+    <div class="cs-hero-noise"></div>
+    <div class="cs-hero-content">
+      <p class="cs-hero-tag" style="animation: fadeRise 0.8s ease-out both;">Systems Design · AI Solver · Product Ownership</p>
+      <h1 class="cs-hero-title" style="animation: fadeRise 0.8s ease-out 0.15s both;">Taybly<em>End timetable chaos.</em></h1>
+      <div class="cs-hero-meta" style="animation: fadeRise 0.8s ease-out 0.3s both;">
+        <div class="cs-meta-item"><span class="cs-meta-label">Role</span><span class="cs-meta-val">Designer & Engineer</span></div>
+        <div class="cs-meta-item"><span class="cs-meta-label">Timeline</span><span class="cs-meta-val">2026 – Present</span></div>
+        <div class="cs-meta-item"><span class="cs-meta-label">Stack</span><span class="cs-meta-val">React · Node · Constraint Solver</span></div>
+        <div class="cs-meta-item"><span class="cs-meta-label">Status</span><span class="cs-meta-val">Live · Production</span></div>
+      </div>
+      <a href="https://www.taybly.com" target="_blank" class="cs-hero-btn" style="animation: fadeRise 0.8s ease-out 0.45s both;">Live Site ↗</a>
+    </div>
+  </section>
+
+  <div class="cs-body">
+
+    <!-- OVERVIEW -->
+    <section class="cs-section">
+      <p class="cs-section-label reveal">Overview</p>
+      <div class="cs-2col-wide">
+        <div>
+          <h2 class="cs-h2 reveal">A constraint solver<br /><em>built for real schools.</em></h2>
+          <p class="cs-p reveal">Taybly is an AI-powered timetable scheduling system designed for schools and colleges. It handles teachers, rooms, subjects, periods, and a dense web of conflicting constraints — and resolves them into a conflict-free schedule automatically.</p>
+          <p class="cs-p reveal">The problem wasn't just hard computationally. It was hard organisationally: institutions had decades of informal rules, staff preferences, and administrative quirks that no spreadsheet could capture.</p>
+        </div>
+        <div class="reveal">
+          <div class="cs-stats" style="margin:0;">
+            <div class="cs-stat"><div class="cs-stat-val">99.2%</div><div class="cs-stat-label">Conflict-free schedules on first run</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">Mins</div><div class="cs-stat-label">Time to generate a full timetable</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">29+</div><div class="cs-stat-label">Constraint types supported</div></div>
+            <div class="cs-stat"><div class="cs-stat-val">0→1</div><div class="cs-stat-label">Built end-to-end solo</div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREENSHOT 1 -->
+    <div class="cs-screenshot reveal">
+      <div class="cs-screenshot-bar">
+        <div class="cs-dot" style="background:#FF5F57;"></div>
+        <div class="cs-dot" style="background:#FEBC2E;"></div>
+        <div class="cs-dot" style="background:#28C840;"></div>
+      </div>
+      <img src="../uploads/taybly-2.png" alt="Taybly timetable view" />
+    </div>
+
+    <!-- PROBLEM -->
+    <section class="cs-section">
+      <p class="cs-section-label reveal">The Problem</p>
+      <h2 class="cs-h2 reveal">Scheduling is an<br /><em>NP-hard problem.</em></h2>
+      <p class="cs-p reveal">Most schools were doing this manually — in Excel, on paper, or using tools that could suggest but never solve. A single school with 40 teachers, 30 classrooms, and 6 periods a day has billions of possible schedule permutations.</p>
+      <div class="cs-cards">
+        <div class="cs-card reveal">
+          <div class="cs-card-num">01</div>
+          <div class="cs-card-title">Hard Constraints</div>
+          <p class="cs-card-desc">A teacher can't be in two rooms at once. A room can only hold one class. These are non-negotiable — violating them makes the timetable invalid.</p>
+        </div>
+        <div class="cs-card reveal">
+          <div class="cs-card-num">02</div>
+          <div class="cs-card-title">Soft Constraints</div>
+          <p class="cs-card-desc">Teachers prefer certain days off. Labs need to be consecutive. Double periods for some subjects. These are preferences — important, but negotiable.</p>
+        </div>
+        <div class="cs-card reveal">
+          <div class="cs-card-num">03</div>
+          <div class="cs-card-title">Operational Chaos</div>
+          <p class="cs-card-desc">Every institution has custom rules built over years. The system had to be expressive enough to capture all of them without requiring a developer.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREENSHOT 2 -->
+    <div class="cs-screenshot reveal">
+      <div class="cs-screenshot-bar">
+        <div class="cs-dot" style="background:#FF5F57;"></div>
+        <div class="cs-dot" style="background:#FEBC2E;"></div>
+        <div class="cs-dot" style="background:#28C840;"></div>
+      </div>
+      <img src="../uploads/taybly-3.png" alt="Taybly features" />
+    </div>
+
+    <!-- SOLUTION -->
+    <section class="cs-section">
+      <p class="cs-section-label reveal">Approach</p>
+      <div class="cs-2col">
+        <div>
+          <h2 class="cs-h2 reveal">Constraint solver<br /><em>+ copilot interface.</em></h2>
+          <p class="cs-p reveal">I built a custom constraint propagation engine layered on top of a backtracking solver. Hard constraints are enforced by the engine; soft constraints are scored and ranked so the best valid solution floats to the top.</p>
+          <p class="cs-p reveal">The interface was designed so an administrator could express complex institutional rules in plain language — no code, no configuration files. The AI co-pilot interprets intent and converts it to constraint definitions.</p>
+        </div>
+        <div>
+          <div class="cs-quote reveal">
+            <p>"If you can see the system, you can fix the system. Every constraint needed to be transparent and editable — not a black box."</p>
+          </div>
+          <p class="cs-p reveal">The final output is a printable, exportable, fully conflict-free timetable — generated in under 4 seconds for most institutions. Teachers get personalised schedule views, admins get an override panel, and the system flags soft constraint violations so they can be reviewed and accepted.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREENSHOT 3 -->
+    <div class="cs-screenshot reveal">
+      <div class="cs-screenshot-bar">
+        <div class="cs-dot" style="background:#FF5F57;"></div>
+        <div class="cs-dot" style="background:#FEBC2E;"></div>
+        <div class="cs-dot" style="background:#28C840;"></div>
+      </div>
+      <img src="../uploads/taybly-1.png" alt="Taybly landing" />
+    </div>
+
+    <!-- OUTCOME -->
+    <section class="cs-section">
+      <p class="cs-section-label reveal">Outcome</p>
+      <h2 class="cs-h2 reveal">Operational chaos<br /><em>into structured systems.</em></h2>
+      <p class="cs-p reveal">Taybly went from concept to production in under a year, built end-to-end as a solo effort. The constraint engine, the UI, the export system, and the AI co-pilot layer were all designed and shipped by one person.</p>
+      <p class="cs-p reveal">The result: institutions that previously spent 2–3 weeks manually building timetables now generate conflict-free schedules in minutes, with full visibility into every decision the system made.</p>
+    </section>
+
+    <!-- CTA -->
+    <div class="cs-back-cta">
+      <a href="../" class="cs-back-btn">← Back to Portfolio</a>
+    </div>
+  </div>
+
+  <script>
+    const els = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    els.forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

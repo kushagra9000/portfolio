@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kushagra VS — Systems Designer & Builder</title>
+  <meta name="description" content="Portfolio of Kushagra Vikram Singh — Systems Designer & UI/UX Engineer building complex, scalable digital products for Healthcare, Automotive, and AI-driven industries.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #FAFAF9;
+      --fg: #000000;
+      --muted: #6F6F6F;
+      --border: rgba(0,0,0,0.1);
+      --card-bg: #F4F3F1;
+    }
+    [data-theme="dark"] {
+      --bg: #0A0A0A;
+      --fg: #EFEFED;
+      --muted: #8A8A8A;
+      --border: rgba(255,255,255,0.1);
+      --card-bg: #141414;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Manrope', sans-serif;
+      cursor: none;
+      overflow-x: hidden;
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: none; }
+
+    /* ── Cursor ───────────────────────────────── */
+    #cursor-dot {
+      width: 6px; height: 6px;
+      background: var(--fg);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9999;
+      transform: translate(-50%,-50%);
+      transition: width 0.15s ease, height 0.15s ease, background 0.2s ease;
+    }
+    #cursor-ring {
+      width: 36px; height: 36px;
+      border: 1px solid var(--fg);
+      border-radius: 50%;
+      position: fixed; top: 0; left: 0;
+      pointer-events: none; z-index: 9998;
+      transform: translate(-50%,-50%);
+      opacity: 0.35;
+      transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease, top 0.08s linear, left 0.08s linear;
+    }
+    body.cursor-hover #cursor-dot { width: 3px; height: 3px; }
+    body.cursor-hover #cursor-ring { width: 52px; height: 52px; opacity: 0.2; }
+
+    /* ── Animations ───────────────────────────── */
+    @keyframes fadeRise {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .anim-0 { animation: fadeRise 0.9s ease-out 0s both; }
+    .anim-1 { animation: fadeRise 0.9s ease-out 0.18s both; }
+    .anim-2 { animation: fadeRise 0.9s ease-out 0.36s both; }
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.75s ease, transform 0.75s ease; }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    .reveal.d1 { transition-delay: 0.08s; }
+    .reveal.d2 { transition-delay: 0.16s; }
+    .reveal.d3 { transition-delay: 0.24s; }
+    .reveal.d4 { transition-delay: 0.32s; }
+
+    /* ── Liquid Glass ─────────────────────────── */
+    .liquid-glass {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.12), 0 4px 24px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(160deg,
+        rgba(255,255,255,0.35) 0%,
+        rgba(255,255,255,0) 50%,
+        rgba(255,255,255,0.12) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* ── Nav ──────────────────────────────────── */
+    .nav-outer {
+      position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 50; width: calc(100% - 80px); max-width: 1100px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1), 0 8px 32px rgba(0,0,0,0.3);
+      transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .nav-outer.nav-light {
+      background: rgba(255,255,255,0.82);
+      border-color: rgba(0,0,0,0.08);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+    .nav-outer.nav-light .nav-logo { color: #000000; }
+    .nav-outer.nav-light .nav-links a { color: rgba(0,0,0,0.45); }
+    .nav-outer.nav-light .nav-links a:hover,
+    .nav-outer.nav-light .nav-links a.active { color: #000000; }
+    .nav-outer.nav-light .nav-cta { background: #000000; color: #ffffff; }
+    .nav-inner {
+      padding: 14px 24px 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px;
+    }
+    .nav-logo {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.35rem; letter-spacing: -0.02em;
+      color: #ffffff; white-space: nowrap;
+    }
+    .nav-logo sup { font-size: 0.5em; vertical-align: super; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a {
+      font-size: 0.82rem; color: rgba(255,255,255,0.6);
+      transition: color 0.2s ease; white-space: nowrap;
+    }
+    .nav-links a:hover, .nav-links a.active { color: #ffffff; }
+    .nav-cta {
+      background: rgba(255,255,255,0.95); color: #000000;
+      border: none; border-radius: 999px;
+      padding: 10px 22px; font-size: 0.82rem;
+      font-family: 'Manrope', sans-serif; font-weight: 500;
+      white-space: nowrap;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .nav-cta:hover { transform: scale(1.04); opacity: 0.9; }
+
+    /* ── Hero ─────────────────────────────────── */
+    @keyframes fade-rise {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-rise         { animation: fade-rise 0.8s ease-out both; }
+    .animate-fade-rise-delay   { animation: fade-rise 0.8s ease-out 0.2s both; }
+    .animate-fade-rise-delay-2 { animation: fade-rise 0.8s ease-out 0.4s both; }
+    .animate-fade-rise-delay-3 { animation: fade-rise 0.8s ease-out 0.55s both; }
+
+    .hero {
+      position: relative; min-height: 100svh;
+      width: 100%; overflow: hidden;
+      background: #000;
+      display: flex; align-items: flex-end;
+    }
+    .hero-video { width: 100%; height: 100%; object-fit: cover; }
+    .hero-video-wrap { position: absolute; inset: 0; z-index: 0; }
+    .hero-grad-top { display: none; }
+    .hero-grad-bot { display: none; }
+    .hero-scrim {
+      position: absolute; inset: 0; z-index: 1;
+      background:
+        linear-gradient(to top,  rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.55) 30%, rgba(0,0,0,0.0) 65%),
+        linear-gradient(to right, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.0) 70%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: flex-end;
+      text-align: left;
+      padding: 0 72px 80px;
+      width: 100%; max-width: 1200px;
+      margin: 0 auto;
+    }
+    .hero-tag {
+      font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); margin-bottom: 18px;
+      white-space: nowrap;
+    }
+    .hero-headline {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(3rem, 7vw, 6.5rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.035em;
+      max-width: 780px;
+      color: #ffffff;
+      text-wrap: balance;
+      margin-bottom: 28px;
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .hero-headline span { display: block; }
+    .hero-headline em { font-style: italic; color: rgba(255,255,255,0.5); display: block; margin-top: 4px; }
+    .hero-desc {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.6); max-width: 440px;
+      line-height: 1.75;
+    }
+    .hero-actions { display: flex; gap: 12px; margin-top: 32px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: #ffffff; color: #000000;
+      border: none; border-radius: 999px;
+      padding: 15px 40px; font-size: 0.9rem;
+      font-family: 'Manrope', sans-serif; font-weight: 500;
+      transition: transform 0.2s ease;
+    }
+    .btn-primary:hover { transform: scale(1.03); }
+    .btn-ghost {
+      border-radius: 999px; padding: 15px 28px;
+      font-size: 0.9rem; font-family: 'Manrope', sans-serif;
+      color: rgba(255,255,255,0.8);
+      transition: transform 0.2s ease;
+    }
+    .btn-ghost:hover { transform: scale(1.03); }
+
+    /* ── Marquee ──────────────────────────────── */
+    .marquee-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden; padding: 14px 0;
+      position: relative; z-index: 2;
+    }
+    .marquee-track { display: flex; gap: 0; white-space: nowrap; animation: marqueeScroll 22s linear infinite; }
+    .marquee-item {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); padding: 0 40px; flex-shrink: 0;
+    }
+    .marquee-dot { opacity: 0.4; margin-right: 40px; }
+
+    /* ── Section shell ────────────────────────── */
+    .section { max-width: 1320px; margin: 0 auto; padding: 120px 40px; }
+    .section-label {
+      font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 56px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .section-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      font-weight: 400; line-height: 1.05;
+      letter-spacing: -0.03em; margin-bottom: 64px;
+      max-width: 720px;
+    }
+    .section-title em { font-style: italic; color: var(--muted); }
+
+    /* ── Work — Horizontal Filmstrip ─────────── */
+    .work-film-section { position: relative; }
+    .work-film-progress {
+      position: fixed; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--border); z-index: 45; opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .work-film-progress.visible { opacity: 1; }
+    .work-film-bar {
+      height: 100%; background: var(--fg);
+      transition: width 0.1s linear;
+    }
+    .work-film-pin {
+      position: sticky; top: 0; height: 100vh;
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .work-film-header {
+      padding: 48px 72px 32px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .work-film-label {
+      font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+    }
+    .work-film-counter {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1rem; color: var(--muted); letter-spacing: -0.02em;
+    }
+    .work-film-counter em { color: var(--fg); font-style: normal; }
+    .work-film-track {
+      flex: 1; display: flex; align-items: center;
+      padding: 0 72px; gap: 24px;
+      will-change: transform;
+    }
+    .work-film-card {
+      flex-shrink: 0;
+      width: calc(100vw - 144px - 24px);
+      height: max-content;
+      border-radius: 20px; overflow: hidden;
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1px solid var(--border);
+      transition: transform 0.6s cubic-bezier(0.76,0,0.24,1), opacity 0.5s ease, filter 0.5s ease;
+      background: var(--card-bg);
+    }
+    .work-film-card.inactive {
+      transform: scale(0.94);
+      opacity: 0.45;
+      filter: blur(1px);
+    }
+    .work-film-img {
+      position: relative; overflow: hidden;
+      background: #F0EFED;
+      display: flex; flex-direction: column;
+    }
+    [data-theme="dark"] .work-film-img { background: #1a1a1a; }
+    .work-film-browser-bar {
+      height: 36px; flex-shrink: 0;
+      background: #E8E7E4;
+      display: flex; align-items: center; padding: 0 14px; gap: 7px;
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+    }
+    [data-theme="dark"] .work-film-browser-bar { background: #252525; border-color: rgba(255,255,255,0.06); }
+    .work-film-browser-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .work-film-img-inner {
+      flex: 1; overflow: hidden;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 16px;
+    }
+    .work-film-img-inner img {
+      width: 100%; height: auto;
+      object-fit: contain; object-position: top center;
+      border-radius: 4px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      transition: transform 5s ease;
+    }
+    .work-film-card:not(.inactive) .work-film-img-inner img {
+      transform: scale(1.02) translateY(-1%);
+    }
+    .work-film-img-dots {
+      position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 6px;
+    }
+    .work-film-img-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(255,255,255,0.9); opacity: 0.4; cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .work-film-img-dot.active { opacity: 1; transform: scale(1.3); }
+    .work-film-info {
+      padding: 56px 52px;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .work-film-num {
+      font-family: 'Instrument Serif', serif;
+      font-size: 5rem; font-weight: 400; line-height: 1;
+      letter-spacing: -0.06em; color: var(--fg); opacity: 0.07;
+      margin-bottom: -20px;
+    }
+    .work-film-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .work-film-tag {
+      font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid var(--border); border-radius: 999px;
+      padding: 4px 10px; color: var(--muted);
+    }
+    .work-film-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+      font-weight: 400; line-height: 1.05; letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+    .work-film-desc {
+      font-size: 0.88rem; color: var(--muted); line-height: 1.75;
+      flex: 1;
+    }
+    .work-film-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 0.85rem; font-weight: 600; color: var(--fg);
+      margin-top: 32px; transition: gap 0.25s ease;
+      width: fit-content;
+    }
+    .work-film-cta:hover { gap: 18px; }
+    /* progress dots */
+    .work-dots {
+      position: fixed; right: 32px; top: 50%; transform: translateY(-50%);
+      display: flex; flex-direction: column; gap: 10px;
+      z-index: 40; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .work-dots.visible { opacity: 1; }
+    .work-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--muted); transition: all 0.3s ease;
+    }
+    .work-dot.active { background: var(--fg); transform: scale(1.6); }
+    @media (max-width: 900px) {
+      .work-film-card { grid-template-columns: 1fr; width: calc(100vw - 48px); }
+      .work-film-img { height: 220px; }
+      .work-film-header { padding: 32px 24px 20px; }
+      .work-film-track { padding: 0 24px; }
+      .work-film-info { padding: 32px 28px; }
+    }
+
+    /* ── Stats row ────────────────────────────── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      margin-bottom: 80px;
+    }
+    .stat-cell {
+      background: var(--bg); padding: 40px 32px;
+      display: flex; flex-direction: column; gap: 8px;
+    }
+    .stat-val {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.8rem; letter-spacing: -0.04em; line-height: 1;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Process — new layout ─────────────────── */
+    .process-new-layout {
+      display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start;
+    }
+    .process-new-left { position: sticky; top: 120px; }
+    .process-new-heading {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      font-weight: 400; line-height: 1.05;
+      letter-spacing: -0.03em; margin-bottom: 20px;
+    }
+    .process-new-heading em { font-style: italic; color: var(--muted); display: block; }
+    .process-new-sub { font-size: 0.9rem; color: var(--muted); line-height: 1.7; max-width: 320px; }
+    .process-new-right { display: flex; flex-direction: column; gap: 0; }
+    .process-step-row {
+      border-top: 1px solid var(--border);
+      padding: 28px 0; cursor: pointer;
+      transition: padding 0.3s ease;
+    }
+    .process-step-row:last-child { border-bottom: 1px solid var(--border); }
+    .process-step-header {
+      display: flex; align-items: center; gap: 16px;
+    }
+    .process-step-icon {
+      font-size: 1.1rem; color: var(--muted); width: 24px; text-align: center;
+      transition: color 0.2s ease;
+    }
+    .process-step-row.active .process-step-icon { color: var(--fg); }
+    .process-step-num {
+      font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--muted); width: 32px;
+    }
+    .process-step-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.4rem; font-weight: 400; letter-spacing: -0.02em;
+      flex: 1; transition: color 0.2s ease;
+    }
+    .process-step-row.active .process-step-title { color: var(--fg); }
+    .process-step-chevron {
+      font-size: 1.2rem; color: var(--muted); transition: transform 0.3s ease;
+      width: 20px; text-align: center;
+    }
+    .process-step-body {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+      opacity: 0; padding-left: 72px;
+    }
+    .process-step-body-inner {
+      overflow: hidden;
+    }
+    .process-step-row.active .process-step-body {
+      grid-template-rows: 1fr; opacity: 1; padding-top: 16px;
+    }
+    .process-step-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin-bottom: 8px; }
+    .process-step-detail { font-size: 0.8rem; color: var(--muted); opacity: 0.6; line-height: 1.6; font-style: italic; }
+
+    /* ── Lab — new layout ─────────────────────── */
+    .lab-new-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 48px; flex-wrap: wrap; gap: 16px; }
+    .lab-new-heading {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.2rem, 4vw, 3.6rem);
+      font-weight: 400; letter-spacing: -0.03em; line-height: 1.05;
+    }
+    .lab-new-heading em { font-style: italic; color: var(--muted); }
+    .lab-new-sub { font-size: 0.88rem; color: var(--muted); line-height: 1.65; max-width: 320px; }
+    .lab-new-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .lab-new-card {
+      background: var(--card-bg); border-radius: 16px;
+      padding: 36px 28px 28px;
+      display: flex; flex-direction: column; gap: 0;
+      border: 1px solid transparent;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      position: relative; overflow: hidden;
+    }
+    .lab-new-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,0,0,0.03) 0%, transparent 60%);
+      transition: opacity 0.3s ease; opacity: 0;
+    }
+    .lab-new-card.hovered { transform: translateY(-6px); border-color: var(--border); box-shadow: 0 16px 48px rgba(0,0,0,0.08); }
+    .lab-new-card.hovered::before { opacity: 1; }
+    .lab-new-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .lab-new-tag {
+      font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); background: var(--bg);
+      padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border);
+    }
+    .lab-new-stat { font-size: 0.72rem; color: var(--muted); font-family: 'Courier New', monospace; }
+    .lab-new-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 1.6rem; font-weight: 400; letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .lab-new-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; flex: 1; margin-bottom: 28px; }
+    .lab-new-footer { display: flex; align-items: center; gap: 10px; }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
+    .lab-pulse-dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--fg); opacity: 0.5;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @media (max-width: 900px) {
+      .process-new-layout { grid-template-columns: 1fr; gap: 40px; }
+      .process-new-left { position: static; }
+      .lab-new-grid { grid-template-columns: 1fr; }
+      .lab-new-header { flex-direction: column; align-items: flex-start; }
+    }
+
+    /* ── Contact ──────────────────────────────── */
+    .contact-section { background: var(--card-bg); }
+    .contact-inner {
+      max-width: 1320px; margin: 0 auto; padding: 120px 40px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+    }
+    .contact-heading {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+      font-weight: 400; line-height: 1; letter-spacing: -0.03em;
+    }
+    .contact-heading em { font-style: italic; color: var(--muted); }
+    .contact-links { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; }
+    .contact-link {
+      font-size: 0.85rem; color: var(--muted); display: flex; align-items: center;
+      gap: 8px; transition: color 0.2s ease;
+    }
+    .contact-link:hover { color: var(--fg); }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-field {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px 18px;
+      font-size: 0.9rem; font-family: 'Manrope', sans-serif;
+      color: var(--fg); outline: none; width: 100%;
+      transition: border-color 0.2s ease;
+    }
+    .form-field::placeholder { color: var(--muted); }
+    .form-field:focus { border-color: var(--fg); }
+    textarea.form-field { min-height: 120px; resize: vertical; }
+    .form-submit {
+      background: var(--fg); color: var(--bg); border: none;
+      border-radius: 8px; padding: 16px 28px;
+      font-size: 0.9rem; font-family: 'Manrope', sans-serif;
+      font-weight: 500; transition: opacity 0.2s ease;
+      align-self: flex-start;
+    }
+    .form-submit:hover { opacity: 0.8; }
+
+    /* ── Footer ───────────────────────────────── */
+    .footer {
+      max-width: 1320px; margin: 0 auto; padding: 32px 40px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem; color: var(--muted);
+    }
+
+    /* ── Tweaks Panel ─────────────────────────── */
+    .tweaks-panel {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 24px;
+      min-width: 240px; box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      display: none; flex-direction: column; gap: 16px;
+    }
+    .tweaks-panel.open { display: flex; }
+    .tweaks-panel h3 { font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+    .tweak-row { display: flex; flex-direction: column; gap: 6px; }
+    .tweak-row label { font-size: 0.72rem; color: var(--muted); }
+    .tweak-row select, .tweak-row input[type=range] {
+      width: 100%; font-size: 0.8rem; padding: 6px 8px;
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--fg); font-family: 'Manrope', sans-serif;
+    }
+    .tweak-toggle-row { display: flex; justify-content: space-between; align-items: center; }
+    .tweak-toggle-row label { font-size: 0.8rem; }
+    .toggle-pill {
+      width: 36px; height: 20px; border-radius: 999px;
+      background: var(--border); border: none; position: relative;
+      transition: background 0.2s ease;
+    }
+    .toggle-pill.on { background: var(--fg); }
+    .toggle-pill::after {
+      content: ''; position: absolute;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--bg); top: 3px; left: 3px;
+      transition: transform 0.2s ease;
+    }
+    .toggle-pill.on::after { transform: translateX(16px); }
+
+    /* ── Responsive ───────────────────────────── */
+    @media (max-width: 900px) {
+      .hero-content { padding: 0 24px 48px; }
+      .hero-tag { white-space: normal; }
+      .nav-outer { width: calc(100% - 32px); top: 12px; }
+      .nav-links { display: none; }
+      .nav-inner { padding: 12px 18px; }
+      .section { padding: 80px 24px; }
+      .work-card { grid-template-columns: 48px 1fr; }
+      .work-card-img-wrap { display: none; }
+      .process-grid { grid-template-columns: 1fr; }
+      .lab-grid { grid-template-columns: 1fr; }
+      .contact-inner { grid-template-columns: 1fr; gap: 48px; padding: 80px 24px; }
+      .stats-row { grid-template-columns: 1fr; }
+      .footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+  <div id="root"></div>
+
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <script type="text/babel">
+    const { useState, useEffect, useRef, useCallback } = React;
+
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "theme": "light",
+      "headlineVariant": 1,
+      "showVideo": true,
+      "videoOpacity": 100
+    }/*EDITMODE-END*/;
+
+    // ─── Scroll reveal hook ───────────────────────────────────────
+    function useReveal() {
+      useEffect(() => {
+        const els = document.querySelectorAll('.reveal');
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+        }, { threshold: 0.12 });
+        els.forEach(el => obs.observe(el));
+        return () => obs.disconnect();
+      }, []);
+    }
+
+    // ─── Custom Cursor ────────────────────────────────────────────
+    function useCursor() {
+      useEffect(() => {
+        const dot = document.getElementById('cursor-dot');
+        const ring = document.getElementById('cursor-ring');
+        let rx = 0, ry = 0;
+        const onMove = e => {
+          dot.style.left = e.clientX + 'px';
+          dot.style.top = e.clientY + 'px';
+          rx = e.clientX; ry = e.clientY;
+        };
+        let raf;
+        const lerp = (a, b, t) => a + (b - a) * t;
+        let cx = 0, cy = 0;
+        const tick = () => {
+          cx = lerp(cx, rx, 0.1);
+          cy = lerp(cy, ry, 0.1);
+          ring.style.left = cx + 'px';
+          ring.style.top = cy + 'px';
+          raf = requestAnimationFrame(tick);
+        };
+        tick();
+        document.addEventListener('mousemove', onMove);
+        const hoverEls = () => document.querySelectorAll('a,button,.work-card,.lab-card');
+        const addHover = () => hoverEls().forEach(el => {
+          el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+          el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+        addHover();
+        const mo = new MutationObserver(addHover);
+        mo.observe(document.body, { childList: true, subtree: true });
+        return () => { document.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf); mo.disconnect(); };
+      }, []);
+    }
+
+    // ─── Video Hero — seamless crossfade loop ─────────────────────
+    function HeroVideo({ showVideo, opacity }) {
+      const aRef = useRef(null);
+      const bRef = useRef(null);
+      const activeRef = useRef('a');
+      const rafRef = useRef(null);
+      const SRC = "uploads/hero.mp4";
+      const CROSSFADE = 1.2; // seconds before end to start crossfade
+
+      useEffect(() => {
+        if (!showVideo) return;
+        const va = aRef.current;
+        const vb = bRef.current;
+        if (!va || !vb) return;
+
+        const target = opacity / 100;
+
+        // Fade in on first play
+        va.style.opacity = '0';
+        vb.style.opacity = '0';
+
+        const fadeIn = () => {
+          let o = 0;
+          const step = () => {
+            o = Math.min(o + 0.03, target);
+            va.style.opacity = o;
+            if (o < target) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        };
+
+        const crossfade = (from, to) => {
+          to.currentTime = 0;
+          to.play().catch(() => {});
+          let t = 0;
+          const step = () => {
+            t = Math.min(t + 0.025, 1);
+            from.style.opacity = (target * (1 - t)).toFixed(3);
+            to.style.opacity   = (target * t).toFixed(3);
+            if (t < 1) requestAnimationFrame(step);
+            else { from.pause(); from.currentTime = 0; }
+          };
+          requestAnimationFrame(step);
+        };
+
+        // timeupdate watcher
+        const watchA = () => {
+          if (!va.duration) return;
+          if (activeRef.current === 'a' && va.duration - va.currentTime < CROSSFADE) {
+            activeRef.current = 'b';
+            va.removeEventListener('timeupdate', watchA);
+            vb.addEventListener('timeupdate', watchB);
+            crossfade(va, vb);
+          }
+        };
+        const watchB = () => {
+          if (!vb.duration) return;
+          if (activeRef.current === 'b' && vb.duration - vb.currentTime < CROSSFADE) {
+            activeRef.current = 'a';
+            vb.removeEventListener('timeupdate', watchB);
+            va.addEventListener('timeupdate', watchA);
+            crossfade(vb, va);
+          }
+        };
+
+        va.addEventListener('timeupdate', watchA);
+        va.play().catch(() => {});
+        fadeIn();
+
+        return () => {
+          va.removeEventListener('timeupdate', watchA);
+          vb.removeEventListener('timeupdate', watchB);
+          va.pause(); vb.pause();
+        };
+      }, [showVideo, opacity]);
+
+      if (!showVideo) return null;
+      return (
+        <div className="hero-video-wrap">
+          <video ref={aRef} className="hero-video" src={SRC} muted={true} playsInline={true} preload="auto" style={{opacity:0,position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}}></video>
+          <video ref={bRef} className="hero-video" src={SRC} muted={true} playsInline={true} preload="auto" style={{opacity:0,position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover'}}></video>
+        </div>
+      );
+    }
+
+    // ─── Nav ──────────────────────────────────────────────────────
+    function Nav() {
+      const [light, setLight] = useState(false);
+      useEffect(() => {
+        const hero = document.querySelector('.hero');
+        const fn = () => {
+          const heroH = hero ? hero.offsetHeight : window.innerHeight;
+          setLight(window.scrollY > heroH - 80);
+        };
+        window.addEventListener('scroll', fn, { passive: true });
+        return () => window.removeEventListener('scroll', fn);
+      }, []);
+      return (
+        <nav className={`nav-outer${light ? ' nav-light' : ''}`}>
+          <div className="nav-inner">
+            <span className="nav-logo">KVS<sup>®</sup></span>
+            <div className="nav-links">
+              <a href="#work" className="active">Work</a>
+              <a href="#process">About</a>
+              <a href="#lab">Lab</a>
+              <a href="#contact">Contact</a>
+            </div>
+            <button className="nav-cta" onClick={() => window.scrollTo({ top: document.getElementById('contact').offsetTop, behavior: 'smooth' })}>
+              Let's Build →
+            </button>
+          </div>
+        </nav>
+      );
+    }
+
+    // ─── Hero ─────────────────────────────────────────────────────
+    const headlines = [
+      <><span>Designing systems,</span><br /><em>not just screens.</em></>,
+      <><span>Beyond complexity,</span><br /><em>I build systems that endure.</em></>,
+      <><span>Where clarity</span><br /><em>meets scale.</em></>,
+    ];
+
+    function Hero({ tweaks }) {
+      return (
+        <section className="hero">
+          <HeroVideo showVideo={tweaks.showVideo} opacity={tweaks.videoOpacity} />
+          <div className="hero-scrim"></div>
+          <div className="hero-content">
+            <p className="hero-tag animate-fade-rise">Systems Designer · UI/UX Engineer · Product Builder</p>
+            <h1 className="hero-headline animate-fade-rise-delay">
+              {headlines[tweaks.headlineVariant - 1]}
+            </h1>
+            <p className="hero-desc animate-fade-rise-delay-2">
+              I build systems that handle complexity — from AI-powered scheduling to medical software. Clarity, scale, decisions that work in the real world.
+            </p>
+            <div className="hero-actions animate-fade-rise-delay-3">
+              <button className="btn-primary" onClick={() => window.scrollTo({ top: document.getElementById('work').offsetTop, behavior: 'smooth' })}>Explore Work</button>
+              <button className="btn-ghost liquid-glass" onClick={() => window.scrollTo({ top: document.getElementById('contact').offsetTop, behavior: 'smooth' })}>Get in touch</button>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // ─── Marquee ──────────────────────────────────────────────────
+    function Marquee() {
+      const items = ['Systems Design', 'AI Integration', 'UX Engineering', 'Product Building', 'Constraint Solving', '0→1 Execution', 'Healthcare Tech', 'Timetable AI'];
+      const doubled = [...items, ...items];
+      return (
+        <div className="marquee-bar">
+          <div className="marquee-track">
+            {doubled.map((item, i) => (
+              <span key={i} className="marquee-item">{item}<span className="marquee-dot"> ·</span></span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // ─── Work ─────────────────────────────────────────────────────
+    const projects = [
+      {
+        num: '01',
+        title: 'Taybly — AI Timetable System',
+        tags: ['Systems Design', 'AI Solver', 'Product Ownership'],
+        desc: 'Designed and built a constraint-based scheduling system for schools and colleges. Handles teachers, rooms, subjects, and complex constraints — turning operational chaos into structured systems.',
+        images: ['uploads/taybly-1.png','uploads/taybly-2.png','uploads/taybly-3.png'],
+        href: 'case-studies/taybly',
+      },
+      {
+        num: '02',
+        title: 'Pathology LIMS System',
+        tags: ['Healthcare', 'Hybrid Architecture', 'Systems Design'],
+        desc: 'A hybrid-first LIMS designed for unreliable infrastructure environments. Ensures uninterrupted lab operations regardless of connectivity — reliability where it matters most.',
+        images: ['uploads/lims-1.png','uploads/lims-2.png','uploads/lims-3.png'],
+        href: 'case-studies/lims',
+      },
+      {
+        num: '03',
+        title: 'TorqUp — Automotive Intelligence',
+        tags: ['Automotive Hub', 'AI Integration', 'Product Strategy'],
+        desc: 'A unified platform for automotive enthusiasts — AI-powered insights, community, and decision tools without the fragmentation. Scaling digital ecosystems for passionate communities.',
+        images: ['uploads/torqup-1.png','uploads/torqup-3.png'],
+        href: 'case-studies/torqup',
+      },
+    ];
+
+    // ─── Image Carousel ───────────────────────────────────────
+    function ImageCarousel({ images, active }) {
+      const [idx, setIdx] = React.useState(0);
+      const [fade, setFade] = React.useState(true);
+      React.useEffect(() => {
+        if (!active || images.length <= 1) return;
+        const t = setInterval(() => {
+          setFade(false);
+          setTimeout(() => { setIdx(i => (i + 1) % images.length); setFade(true); }, 300);
+        }, 2600);
+        return () => clearInterval(t);
+      }, [images, active]);
+      return (
+        <div className="work-film-img">
+          <div className="work-film-browser-bar">
+            <div className="work-film-browser-dot" style={{background:'#FF5F57'}}></div>
+            <div className="work-film-browser-dot" style={{background:'#FEBC2E'}}></div>
+            <div className="work-film-browser-dot" style={{background:'#28C840'}}></div>
+          </div>
+          <div className="work-film-img-inner">
+            <img src={images[idx]} alt="" style={{opacity: fade ? 1 : 0, transition:'opacity 0.3s ease'}} />
+          </div>
+          {images.length > 1 && (
+            <div className="work-film-img-dots" style={{position:'absolute',bottom:12,left:'50%',transform:'translateX(-50%)'}}>
+              {images.map((_,i) => (
+                <div key={i} className={"work-film-img-dot"+(i===idx?' active':'')}
+                  onClick={() => { setFade(false); setTimeout(()=>{ setIdx(i); setFade(true); },200); }}></div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // ─── Work Section — Horizontal Filmstrip ──────────────────────
+    function WorkSection() {
+      const [active, setActive] = React.useState(0);
+      const sectionRef = React.useRef(null);
+      const trackRef = React.useRef(null);
+      const dotsRef = React.useRef(null);
+      const progressRef = React.useRef(null);
+      const CARD_GAP = 24;
+
+      React.useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+        const onScroll = () => {
+          const rect = section.getBoundingClientRect();
+          const totalH = section.offsetHeight - window.innerHeight;
+          const scrolled = Math.max(0, -rect.top);
+          const progress = Math.min(scrolled / totalH, 1);
+          // Active index
+          const idx = Math.min(Math.floor(progress * projects.length), projects.length - 1);
+          setActive(idx);
+          // Move track
+          const track = trackRef.current;
+          if (track) {
+            const cardW = window.innerWidth - 144;
+            const offset = idx * (cardW + CARD_GAP);
+            track.style.transform = `translateX(-${offset}px)`;
+          }
+          // Progress bar
+          if (progressRef.current) {
+            progressRef.current.querySelector('.work-film-bar').style.width = (progress * 100) + '%';
+          }
+          // Dots
+          const inView = rect.top < window.innerHeight && rect.bottom > 0;
+          if (dotsRef.current) dotsRef.current.classList.toggle('visible', inView);
+          if (progressRef.current) progressRef.current.classList.toggle('visible', inView);
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+      }, []);
+
+      return (
+        <>
+          <div ref={progressRef} className="work-film-progress"><div className="work-film-bar"></div></div>
+          <div ref={dotsRef} className="work-dots">
+            {projects.map((_, i) => (
+              <div key={i} className={"work-dot"+(i===active?' active':'')}></div>
+            ))}
+          </div>
+          <div ref={sectionRef} className="work-film-section" id="work"
+            style={{height: `${projects.length * 100 + 40}vh`}}>
+            {/* Stats row — above the sticky zone */}
+            <div className="section" style={{paddingTop:'64px', paddingBottom:'0', position:'relative', zIndex:1}}>
+              <p className="section-label reveal">Selected Work</p>
+              <div className="stats-row reveal d1">
+                <div className="stat-cell"><span className="stat-val">2+</span><span className="stat-label">Production products<br/>shipped end-to-end</span></div>
+                <div className="stat-cell"><span className="stat-val">AI+</span><span className="stat-label">Timetables · LIMS<br/>Automation pipelines</span></div>
+                <div className="stat-cell"><span className="stat-val">0→1</span><span className="stat-label">Full execution<br/>idea to production</span></div>
+              </div>
+            </div>
+            <div className="work-film-pin">
+              <div className="work-film-header">
+                <span className="work-film-label">Selected Work</span>
+                <span className="work-film-counter">
+                  <em>{String(active + 1).padStart(2,'0')}</em> / {String(projects.length).padStart(2,'0')}
+                </span>
+              </div>
+              <div ref={trackRef} className="work-film-track" style={{transition:'transform 0.65s cubic-bezier(0.76,0,0.24,1)'}}>
+                {projects.map((p, i) => (
+                  <div key={p.num} className={"work-film-card"+(i!==active?' inactive':'')}>
+                    <ImageCarousel images={p.images} active={i===active} />
+                    <div className="work-film-info">
+                      <div>
+                        <div className="work-film-num">{p.num}</div>
+                        <div className="work-film-tags">{p.tags.map(t=><span key={t} className="work-film-tag">{t}</span>)}</div>
+                        <h3 className="work-film-title">{p.title}</h3>
+                        <p className="work-film-desc">{p.desc}</p>
+                      </div>
+                      <a href={p.href} className="work-film-cta">View Case Study <span>→</span></a>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+        // ─── Process ──────────────────────────────────────────────────
+    function ProcessSection() {
+      const [activeStep, setActiveStep] = React.useState(0);
+      const steps = [
+        { num: '01', title: 'Constraint Mapping', desc: 'I start by defining the problem space — the rules, edge cases, and real-world constraints that shape every decision before a single pixel is drawn.', detail: 'What are the hard limits? What breaks first? What does success actually look like?', icon: '◈' },
+        { num: '02', title: 'System Architecture', desc: 'Building scalable logic: data flows, decision trees, and system boundaries. I design how things connect, not just how they look.', detail: 'Entities, relationships, edge cases, failure modes — all mapped before any UI is designed.', icon: '⬡' },
+        { num: '03', title: '0 → 1 Execution', desc: 'From architecture to working software. I bridge product thinking, engineering, and UX to take ideas from validated concept to production.', detail: 'I write the code, design the flows, and ship — one loop at a time.', icon: '↗' },
+        { num: '04', title: 'Operational Clarity', desc: 'Refining for the real world — imperfect environments, real users, real infrastructure. Robustness and simplicity over theoretical perfection.', detail: 'Field-tested, edge-case-hardened, and clear enough for anyone to maintain.', icon: '◎' },
+      ];
+      React.useEffect(() => {
+        const t = setInterval(() => setActiveStep(s => (s + 1) % steps.length), 3000);
+        return () => clearInterval(t);
+      }, []);
+      return (
+        <section className="section" id="process" style={{paddingTop:0}}>
+          <p className="section-label reveal">Approach</p>
+          <div className="process-new-layout reveal d1">
+            <div className="process-new-left">
+              <h2 className="process-new-heading">How I<br /><em>actually work.</em></h2>
+              <p className="process-new-sub">Four phases. No fluff. Systems that survive contact with reality.</p>
+            </div>
+            <div className="process-new-right">
+              {steps.map((s, i) => (
+                <div
+                  key={s.num}
+                  className={"process-step-row" + (i === activeStep ? " active" : "")}
+                  onClick={() => setActiveStep(i)}
+                >
+                  <div className="process-step-header">
+                    <span className="process-step-icon">{s.icon}</span>
+                    <span className="process-step-num">{s.num}</span>
+                    <h3 className="process-step-title">{s.title}</h3>
+                    <span className="process-step-chevron">{i === activeStep ? '−' : '+'}</span>
+                  </div>
+                  <div className="process-step-body">
+                    <div className="process-step-body-inner">
+                      <p className="process-step-desc">{s.desc}</p>
+                      <p className="process-step-detail">{s.detail}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // ─── Lab ──────────────────────────────────────────────────────
+    function LabSection() {
+      const [hovered, setHovered] = React.useState(null);
+      const experiments = [
+        { id: 0, tag: 'AI · Scheduling', title: 'Constraint Solvers', desc: 'High-density scheduling with real-world feasibility. Turns impossible requirements into working timetables.', stat: '99.2% conflict-free', color: '#1a1a1a' },
+        { id: 1, tag: 'AI · Language', title: 'LLM Workflows', desc: 'Natural language → system actions. Making AI behave like a precise collaborator, not a hallucinating oracle.', stat: '< 200ms response', color: '#0f1f12' },
+        { id: 2, tag: 'Design · Data', title: 'Visualizing Logic', desc: 'Complex decision trees, made legible. If you can see the system, you can fix the system.', stat: 'Zero ambiguity', color: '#1a1208' },
+      ];
+      return (
+        <section className="section" id="lab" style={{paddingTop:0}}>
+          <p className="section-label reveal">Experiments</p>
+          <div className="lab-new-header reveal d1">
+            <h2 className="lab-new-heading">AI + <em>Systems Thinking</em></h2>
+            <p className="lab-new-sub">Active explorations at the edge of constraint, intelligence, and clarity.</p>
+          </div>
+          <div className="lab-new-grid reveal d2">
+            {experiments.map((e) => (
+              <div
+                key={e.id}
+                className={"lab-new-card" + (hovered === e.id ? " hovered" : "")}
+                onMouseEnter={() => setHovered(e.id)}
+                onMouseLeave={() => setHovered(null)}
+              >
+                <div className="lab-new-top">
+                  <span className="lab-new-tag">{e.tag}</span>
+                  <span className="lab-new-stat">{e.stat}</span>
+                </div>
+                <h3 className="lab-new-title">{e.title}</h3>
+                <p className="lab-new-desc">{e.desc}</p>
+                <div className="lab-new-footer">
+                  <span className="lab-pulse-dot"></span>
+                  <span style={{fontSize:'0.7rem',color:'var(--muted)',letterSpacing:'0.1em',textTransform:'uppercase'}}>Active</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    // ─── Contact ──────────────────────────────────────────────────
+    function ContactSection() {
+      const [form, setForm] = useState({ name: '', email: '', message: '' });
+      const [sent, setSent] = useState(false);
+      const [loading, setLoading] = useState(false);
+      const update = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
+      const submit = async e => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+          const response = await fetch('https://formspree.io/f/xbdqpvll', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(form)
+          });
+          if (response.ok) {
+            setSent(true);
+          } else {
+            console.error('Form submission failed');
+            alert('There was an issue sending your message. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error submitting form', error);
+          alert('There was a network error. Please try again.');
+        } finally {
+          setLoading(false);
+        }
+      };
+      return (
+        <section className="contact-section" id="contact">
+          <div className="contact-inner">
+            <div>
+              <h2 className="contact-heading reveal">Let's build<br /><em>the future</em><br />of systems.</h2>
+              <div className="contact-links">
+                <a className="contact-link" href="https://github.com/kushagra9000" target="_blank" rel="noopener noreferrer">↗ GitHub — kushagra9000</a>
+                <a className="contact-link" href="https://linkedin.com/in/kvs24" target="_blank" rel="noopener noreferrer">↗ LinkedIn — kvs24</a>
+                <a className="contact-link" href="mailto:kushagra@example.com">↗ Email — Available for opportunities</a>
+              </div>
+            </div>
+            <div className="reveal d2">
+              {sent ? (
+                <div style={{ padding: '48px 0', fontFamily: "'Instrument Serif', serif", fontSize: '1.6rem' }}>
+                  Message sent.<br /><em style={{ color: 'var(--muted)' }}>I'll be in touch.</em>
+                </div>
+              ) : (
+                <form className="contact-form" onSubmit={submit}>
+                  <input className="form-field" name="name" placeholder="Name" value={form.name} onChange={update('name')} required disabled={loading} />
+                  <input className="form-field" type="email" name="email" placeholder="Email address" value={form.email} onChange={update('email')} required disabled={loading} />
+                  <textarea className="form-field" name="message" placeholder="What are we building?" value={form.message} onChange={update('message')} required disabled={loading}></textarea>
+                  <button type="submit" className="form-submit" disabled={loading}>
+                    {loading ? 'Sending...' : 'Send Message'}
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // ─── Footer ───────────────────────────────────────────────────
+    function Footer() {
+      return (
+        <footer className="footer">
+          <span>© 2026 Kushagra Vikram Singh. Systems Designer & Builder.</span>
+          <span>Available for new opportunities</span>
+        </footer>
+      );
+    }
+
+    // ─── Tweaks Panel ─────────────────────────────────────────────
+    function TweaksPanel({ tweaks, setTweak, onClose }) {
+      return (
+        <div className="tweaks-panel open">
+          <h3>Tweaks</h3>
+          <div className="tweak-row">
+            <label>Theme</label>
+            <select value={tweaks.theme} onChange={e => setTweak('theme', e.target.value)}>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+          <div className="tweak-row">
+            <label>Headline variant</label>
+            <select value={tweaks.headlineVariant} onChange={e => setTweak('headlineVariant', Number(e.target.value))}>
+              <option value={1}>Beyond complexity…</option>
+              <option value={2}>Designing systems…</option>
+              <option value={3}>Where clarity meets scale…</option>
+            </select>
+          </div>
+          <div className="tweak-toggle-row">
+            <label>Video background</label>
+            <button className={`toggle-pill${tweaks.showVideo ? ' on' : ''}`} onClick={() => setTweak('showVideo', !tweaks.showVideo)}></button>
+          </div>
+          <div className="tweak-row">
+            <label>Video opacity ({tweaks.videoOpacity}%)</label>
+            <input type="range" min={20} max={100} step={5} value={tweaks.videoOpacity} onChange={e => setTweak('videoOpacity', Number(e.target.value))} />
+          </div>
+          <button style={{ fontSize: '0.75rem', color: 'var(--muted)', background: 'none', border: 'none', alignSelf: 'flex-start' }} onClick={onClose}>Close ✕</button>
+        </div>
+      );
+    }
+
+    // ─── App ──────────────────────────────────────────────────────
+    function App() {
+      const [tweaks, setTweaksState] = useState(TWEAK_DEFAULTS);
+      const [tweaksOpen, setTweaksOpen] = useState(false);
+
+      const setTweak = (k, v) => {
+        setTweaksState(t => {
+          const next = { ...t, [k]: v };
+          window.parent.postMessage({ type: '__edit_mode_set_keys', edits: next }, '*');
+          return next;
+        });
+      };
+
+      useEffect(() => {
+        document.documentElement.setAttribute('data-theme', tweaks.theme);
+      }, [tweaks.theme]);
+
+      useEffect(() => {
+        const handler = e => {
+          if (e.data?.type === '__activate_edit_mode') setTweaksOpen(true);
+          if (e.data?.type === '__deactivate_edit_mode') setTweaksOpen(false);
+        };
+        window.addEventListener('message', handler);
+        window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+        return () => window.removeEventListener('message', handler);
+      }, []);
+
+      useCursor();
+      useReveal();
+
+      return (
+        <>
+          <Nav />
+          <Hero tweaks={tweaks} />
+          <Marquee />
+          <WorkSection />
+          <ProcessSection />
+          <LabSection />
+          <ContactSection />
+          <Footer />
+          {tweaksOpen && <TweaksPanel tweaks={tweaks} setTweak={setTweak} onClose={() => { setTweaksOpen(false); window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); }} />}
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
